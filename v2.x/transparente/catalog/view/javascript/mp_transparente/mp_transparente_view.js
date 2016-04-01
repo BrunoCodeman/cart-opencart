@@ -169,11 +169,17 @@ document.getElementById('button_pay').addEventListener('click', function () {
                     document.getElementById('expiration_month_label').innerHTML = dt.expiration_month_placeholder;
                     document.getElementById('expiration_year_label').innerHTML = dt.expiration_year_placeholder;
                     document.getElementById('card_name_label').innerHTML =  dt.name_placeholder;
+                    console.info(dt.installments_placeholder);
                     document.getElementById('installments_label').innerHTML = dt.installments_placeholder;
                     document.getElementById('cardType_label').innerHTML = dt.cardType_placeholder;
                     document.getElementById('button_pay').innerHTML = dt.payment_button;
-                    document.getElementById('paymentTitle').innerHTML = dt.payment_title;
-                    document.getElementById('return_message').innerHTML = dt.payment_processing;  
+                    if (document.getElementById('paymentTitle') != undefined) {
+                        document.getElementById('paymentTitle').innerHTML = dt.payment_title;
+                    }
+                    if (document.getElementById('return_message') != undefined) {
+                        document.getElementById('return_message').innerHTML = dt.payment_processing;  
+                    }
+                    
                     document.getElementById('doc_type_label').innerHTML = dt.doctype_placeholder;
                     document.getElementById('doc_number_label').innerHTML = dt.docnumber_placeholder;
                 });
@@ -226,24 +232,18 @@ function getInstallments()
 
     Mercadopago.setPublishableKey(public_key);
     
-    
     Mercadopago.getInstallments(config, function(httpStatus, data){
         if (httpStatus == 200)
         {
             var installments = data[0].payer_costs;
             //document.getElementById('paymentType').value = data[0].payment_method_id;
-            var i = installments.length;
-            if( i > 0)
-            {
-                var select = document.getElementById('installments');
-                select.options.length = 0;
-                while(i--)
-                {
-                    var opt = document.createElement('option');    
-                    opt.appendChild(document.createTextNode(installments[i].recommended_message));
-                    opt.value = installments[i].installments;
-                    select.appendChild(opt);
-                }
+            var select = document.getElementById('installments');
+            select.options.length = 0;
+            for (i = 0; i < installments.length; i++) {
+                var opt = document.createElement('option');    
+                opt.appendChild(document.createTextNode(installments[i].recommended_message));
+                opt.value = installments[i].installments;
+                select.appendChild(opt);
             }
         }
        });
