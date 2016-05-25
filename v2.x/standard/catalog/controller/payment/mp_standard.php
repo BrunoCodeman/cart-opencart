@@ -92,7 +92,6 @@ class ControllerPaymentMPStandard extends Controller {
 				"street_number" => "-",
 			),
 			"cost" => round(floatval($this->session->data['shipping_method']['cost']), 2) * $order_info['currency_value'],
-			"mode" => "custom",
 		);
 
 		//Force format YYYY-DD-MMTH:i:s
